@@ -8,25 +8,51 @@ class NoriTerm {
     this.context_.fillRect(0, 0, this.canvas_.width, this.canvas_.height);
   }
 
+  public clearLine(): void {
+    this.clearRegion(0, this.cursorPosition_[1], this.columns_, 1);
+    this.moveCursor(0, this.cursorPosition_[1]);
+  }
+
   public put(char: string): void {
     const [charw, charh] = this.getBlockSize();
     const [x, y] = this.cursorPosition_;
 
-    this.moveCursor(this.cursorPosition_[0] + 1, this.cursorPosition_[1]);
+    if (x + 1 >= this.columns_) {
+      this.moveCursor(0, this.cursorPosition_[1] + 1);
+    } else {
+      this.moveCursor(this.cursorPosition_[0] + 1, this.cursorPosition_[1]);
+    }
 
-    this.context_.font = `${this.fontSize_}pt ${this.fontFamily_}`;
+    this.context_.font = this.getFont();
     this.context_.textAlign = "center";
     this.context_.textBaseline = "middle";
     this.context_.fillStyle = this.currentColor_;
     this.context_.fillText(char, x * charw + charw / 2, y * charh + charh / 2);
   }
 
+  public remove(): void {
+    this.moveCursor(this.cursorPosition_[0] - 1, this.cursorPosition_[1]);
+  }
+
+  public newLine(): void {
+    this.moveCursor(0, this.cursorPosition_[1] + 1);
+  }
+
   public resetColor(): void {
     this.currentColor_ = this.colorForeground_;
+    this.fontIsBold = false;
   }
 
   public setColor(index: number): void {
     this.currentColor_ = this.colorPalette_[index - 1];
+  }
+
+  public setBold(): void {
+    this.fontIsBold = true;
+  }
+
+  public getBackgroundColor(): string {
+    return this.colorBackground_;
   }
 
   public moveCursor(x: number, y: number): void {
@@ -47,7 +73,7 @@ class NoriTerm {
   }
 
   constructor() {
-    this.context_.font = `${this.fontSize_}pt ${this.fontFamily_}`;
+    this.context_.font = this.getFont();
 
     const [charw, charh] = this.getBlockSize();
 
@@ -72,14 +98,18 @@ class NoriTerm {
   }
 
   private getBlockSize(): [number, number] {
-    this.context_.font = `${this.fontSize_}pt ${this.fontFamily_}`;
-    return [this.context_.measureText('A').width, this.fontSize_];
+    this.context_.font = this.getFont();
+    return [this.context_.measureText('A').width, this.fontSize_ + Math.floor(this.fontSize_ * 0.45)];
+  }
+
+  private getFont(): string {
+    return `${this.fontIsBold ? 'bold ' : ''}${this.fontSize_}pt ${this.fontFamily_}`
   }
 
   private canvas_: HTMLCanvasElement = document.createElement('canvas');
   private context_: CanvasRenderingContext2D = this.canvas_.getContext('2d')!;
 
-  private columns_: number = 80;
+  private columns_: number = 90;
   private rows_: number = 32;
   private cursorPosition_: [number, number] = [0, 0];
 
@@ -92,4 +122,5 @@ class NoriTerm {
 
   private fontSize_: number = 12;
   private fontFamily_: string = 'Monaco, Courier, monospace';
+  private fontIsBold: boolean = false;
 }
