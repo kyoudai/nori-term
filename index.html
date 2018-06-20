@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Nori Term</title>
+</head>
+<body>
+  <script src="NoriTerm.js"></script>
+  <script>
+    const term = new NoriTerm();
+
+    "Welcome to ".split('').forEach(term.put.bind(term));
+    term.setColor(11);
+    "Nori".split('').forEach(term.put.bind(term));
+    term.resetColor();
+    term.put("!");
+
+    document.body.appendChild(term.getCanvas());
+  </script>
+</body>
+</html>
