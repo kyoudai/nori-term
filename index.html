@@ -34,11 +34,6 @@
     "Nori".split('').forEach(term.put.bind(term));
     term.resetColor();
     term.put("!");
-    
-    term.newLine();
-    term.newLine();
-    "ANSI escape sequences are a standard for in-band signaling to control the cursor location, color, and other options on video text terminals. Certain sequences of bytes, most starting with Esc and '[', are embedded into the text, which the terminal looks for and interprets as commands, not as character codes."
-    .split('').forEach(term.put.bind(term));
 
     document.body.appendChild(term.getCanvas());
     term.getCanvas().style.border = '8px solid ' + term.getBackgroundColor();
@@ -52,6 +47,7 @@
       } else if (event.key.length === 1) {
         term.put(event.key.charAt(0));
       }
+      event.preventDefault();
     });
   </script>
 </body>
