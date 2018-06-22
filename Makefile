@@ -2,7 +2,7 @@
 default: build
 
 build:
-	tsc --strictNullChecks NoriTerm.ts
+	tsc --strictNullChecks NoriTerm.ts VtConnector.ts
 
 watch:
-	tsc --strictNullChecks -w NoriTerm.ts
+	tsc --strictNullChecks -w NoriTerm.ts VtConnector.ts

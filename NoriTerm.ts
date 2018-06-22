@@ -82,6 +82,10 @@ class NoriTerm {
 
     this.clear();
     this.moveCursor(0, 0);
+
+    this.context.font.split('').forEach(this.put.bind(this));
+    this.newLine();
+    this.newLine();
   }
 
   private clearRegion(x: number, y: number, width: number = 1, height: number = 1): void {
@@ -98,12 +102,12 @@ class NoriTerm {
   }
 
   private getBlockSize(): [number, number] {
-    this.context.font = this.getFont();
+    this.context.font = this.getFont(false);
     return [Math.ceil(this.context.measureText('W').width), Math.ceil(this.fontSize * this.fontLineHeight)];
   }
 
-  private getFont(): string {
-    return `${this.fontIsBold ? 'bold ' : ''}${this.fontSize}pt ${this.fontFamily}`
+  private getFont(decorations: boolean = true): string {
+    return `${decorations && this.fontIsBold ? 'bold ' : ''}${this.fontSize}pt ${this.fontFamily}`
   }
 
   private canvas: HTMLCanvasElement = document.createElement('canvas');

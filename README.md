@@ -1,4 +1,4 @@
-![Nori Screenshot](screenshot.png)
+![Nori Screenshot](nori.gif)
 
 # nori-term
 Nori Terminal Emulator
