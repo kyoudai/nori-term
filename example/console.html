@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Nori Console Example</title>
+
+  <style>
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    canvas {
+      margin: 0 auto;
+      box-shadow: 0 0 1px grey;
+    }
+  </style>
+</head>
+<body>
+  <script src="../nova-anglia.js"></script>
+  <script src="../NoriTerm.js"></script>
+  <script src="../ConsoleController.js"></script>
+  <script>
+ 
+    const term = new NoriTerm();
+    term.setTheme(novaAnglia);
+
+    const myConsole = new ConsoleController(term);
+
+    document.body.appendChild(term.getCanvas());
+    term.getCanvas().style.border = '8px solid ' + term.getBackgroundColor();
+  </script>
+</body>
+</html>

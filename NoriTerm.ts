@@ -1,3 +1,10 @@
+interface INoriTheme {
+  foreground: string,
+  background: string,
+  cursor: string,
+  palette: string[]
+}
+
 class NoriTerm {
   public getCanvas(): HTMLCanvasElement {
     return this.canvas;
@@ -14,6 +21,11 @@ class NoriTerm {
   }
 
   public put(char: string): void {
+    if (char.length > 1) {
+      char.split('').forEach(this.put.bind(this));
+      return;
+    }
+
     const [charw, charh] = this.getBlockSize();
     const [x, y] = this.cursorPosition;
 
@@ -38,6 +50,12 @@ class NoriTerm {
     this.moveCursor(0, this.cursorPosition[1] + 1);
   }
 
+  public reset() {
+    this.resetColor();
+    this.clear();
+    this.moveCursor(0, 0);
+  }
+
   public resetColor(): void {
     this.currentColor = this.colorForeground;
     this.fontIsBold = false;
@@ -53,6 +71,15 @@ class NoriTerm {
 
   public getBackgroundColor(): string {
     return this.colorBackground;
+  }
+
+  public setTheme(theme: INoriTheme) {
+    this.colorForeground = theme.foreground;
+    this.colorBackground = theme.background;
+    this.colorCursor = theme.cursor;
+    this.colorPalette = theme.palette;
+
+    this.reset();
   }
 
   public moveCursor(x: number, y: number): void {
@@ -73,19 +100,12 @@ class NoriTerm {
   }
 
   constructor() {
-    this.context.font = this.getFont();
-
     const [charw, charh] = this.getBlockSize();
 
     this.canvas.width = this.columns * charw;
     this.canvas.height = this.rows * charh;
 
-    this.clear();
-    this.moveCursor(0, 0);
-
-    this.context.font.split('').forEach(this.put.bind(this));
-    this.newLine();
-    this.newLine();
+    this.reset();
   }
 
   private clearRegion(x: number, y: number, width: number = 1, height: number = 1): void {

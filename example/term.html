@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Nori Term</title>
+  <title>Nori Term Example</title>
 
   <style>
     html, body {
@@ -24,11 +24,11 @@
   </style>
 </head>
 <body>
-  <script src="NoriTerm.js"></script>
-  <script src="VtConnector.js"></script>
+  <script src="../NoriTerm.js"></script>
+  <script src="../TermController.js"></script>
   <script>
     const term = new NoriTerm();
-    const connector = new VtConnector(term);
+    const connector = new TermController(term);
 
     "Welcome to ".split('').forEach(term.put.bind(term));
     term.setColor(11);

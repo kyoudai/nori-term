@@ -2,7 +2,7 @@
 default: build
 
 build:
-	tsc --strictNullChecks NoriTerm.ts VtConnector.ts
+	tsc --strictNullChecks NoriTerm.ts TermController.ts ConsoleController.ts
 
 watch:
-	tsc --strictNullChecks -w NoriTerm.ts VtConnector.ts
+	tsc --strictNullChecks -w NoriTerm.ts TermController.ts ConsoleController.ts

@@ -1,4 +1,4 @@
-class VtConnector {
+class TermController {
   public read(char: string): void {
     if (this.inSequence) {
       this.accumulator = this.accumulator + char;
@@ -10,10 +10,10 @@ class VtConnector {
       }
       
       return;
-    } else if (char === VtConnector.TOKEN_NEW_LINE) {
+    } else if (char === TermController.TOKEN_NEW_LINE) {
       this.termInstance.newLine();
       return;
-    } else if (char === VtConnector.TOKEN_ESCAPE) {
+    } else if (char === TermController.TOKEN_ESCAPE) {
       this.inSequence = true;
       return;
     }
@@ -39,8 +39,8 @@ class VtConnector {
     }
 
     // colour
-    if (VtConnector.EXP_COLOR.test(escapeSequence)) {
-      const [, foreground] = escapeSequence.match(VtConnector.EXP_COLOR);
+    if (TermController.EXP_COLOR.test(escapeSequence)) {
+      const [, foreground] = escapeSequence.match(TermController.EXP_COLOR);
 
       this.termInstance.setColor(this.getColorIndex(foreground));
 
@@ -48,8 +48,8 @@ class VtConnector {
     }
 
     // colour + formatting
-    if (VtConnector.EXP_COLOR_FORMATTING.test(escapeSequence)) {
-      const [, attributes, foreground] = escapeSequence.match(VtConnector.EXP_COLOR_FORMATTING);
+    if (TermController.EXP_COLOR_FORMATTING.test(escapeSequence)) {
+      const [, attributes, foreground] = escapeSequence.match(TermController.EXP_COLOR_FORMATTING);
 
       if (attributes === '01') {
         this.termInstance.setBold();
