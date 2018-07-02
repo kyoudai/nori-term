@@ -1,8 +1,10 @@
 .PHONY: build watch
 default: build
 
+FLAGS = --strictNullChecks --noImplicitAny --noImplicitReturns
+
 build:
-	tsc --strictNullChecks NoriTerm.ts TermController.ts ConsoleController.ts
+	tsc $(FLAGS) NoriTerm.ts TermController.ts ConsoleController.ts
 
 watch:
-	tsc --strictNullChecks -w NoriTerm.ts TermController.ts ConsoleController.ts
+	tsc $(FLAGS) -w NoriTerm.ts TermController.ts ConsoleController.ts

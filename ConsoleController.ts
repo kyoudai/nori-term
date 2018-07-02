@@ -65,6 +65,7 @@ class ConsoleController {
 
   private bindHandlers() {
     this.termInstance.getCanvas().tabIndex = -1;
+    this.termInstance.setFocus(false);
 
     this.termInstance.getCanvas().addEventListener('keydown', event => {
       if (event.key === 'Enter') {
@@ -76,6 +77,14 @@ class ConsoleController {
       }
 
       event.preventDefault();
+    });
+
+    this.termInstance.getCanvas().addEventListener('blur', event => {
+      this.termInstance.setFocus(false);
+    });
+
+    this.termInstance.getCanvas().addEventListener('focus', event => {
+      this.termInstance.setFocus();
     });
   }
 

@@ -20,6 +20,14 @@ class NoriTerm {
     this.moveCursor(0, this.cursorPosition[1]);
   }
 
+  public scroll(rows: number = 1): void {
+    const [, charh] = this.getBlockSize();
+
+    this.context.drawImage(this.canvas, 0, 0 - rows * charh);
+    this.clearRegion(0, this.rows - rows, this.columns, rows);
+    this.cursorPosition[1] = this.cursorPosition[1] - rows;
+  }
+
   public put(char: string): void {
     if (char.length > 1) {
       char.split('').forEach(this.put.bind(this));
@@ -29,17 +37,17 @@ class NoriTerm {
     const [charw, charh] = this.getBlockSize();
     const [x, y] = this.cursorPosition;
 
-    if (x + 1 >= this.columns) {
-      this.moveCursor(0, this.cursorPosition[1] + 1);
-    } else {
-      this.moveCursor(this.cursorPosition[0] + 1, this.cursorPosition[1]);
-    }
+    this.moveCursor(this.cursorPosition[0] + 1, this.cursorPosition[1]);
 
     this.context.font = this.getFont();
     this.context.textAlign = "center";
     this.context.textBaseline = "middle";
     this.context.fillStyle = this.currentColor;
     this.context.fillText(char, x * charw + charw / 2, y * charh + charh / 2);
+
+    if (this.cursorPosition[0] >= this.columns) {
+      this.newLine();
+    }
   }
 
   public remove(): void {
@@ -47,10 +55,14 @@ class NoriTerm {
   }
 
   public newLine(): void {
+    if (this.cursorPosition[1] === this.rows - 1) {
+      this.scroll();
+    }
+
     this.moveCursor(0, this.cursorPosition[1] + 1);
   }
 
-  public reset() {
+  public reset(): void {
     this.resetColor();
     this.clear();
     this.moveCursor(0, 0);
@@ -73,7 +85,15 @@ class NoriTerm {
     return this.colorBackground;
   }
 
-  public setTheme(theme: INoriTheme) {
+  public getRows(): number {
+    return this.rows;
+  }
+
+  public getColumns(): number {
+    return this.columns;
+  }
+
+  public setTheme(theme: INoriTheme): void {
     this.colorForeground = theme.foreground;
     this.colorBackground = theme.background;
     this.colorCursor = theme.cursor;
@@ -82,7 +102,12 @@ class NoriTerm {
     this.reset();
   }
 
-  public moveCursor(x: number, y: number): void {
+  public setFocus(hasFocus: boolean = true): void {
+    this.cursorFocus = hasFocus;
+    this.moveCursor();
+  }
+
+  public moveCursor(x: number = this.cursorPosition[0], y: number = this.cursorPosition[1]): void {
     const [charw, charh] = this.getBlockSize();
 
     this.clearRegion.apply(this, this.cursorPosition);
@@ -90,13 +115,26 @@ class NoriTerm {
     this.cursorPosition = [x, y];
 
     this.context.fillStyle = this.colorCursor;
+
     this.context.fillRect(
       this.cursorPosition[0] * charw,
       this.cursorPosition[1] * charh,
       charw,
       charh
     );
+
     this.context.fill();
+
+    if (!this.cursorFocus) {
+      this.context.fillStyle = this.colorBackground;
+
+      this.context.fillRect(
+        (this.cursorPosition[0] * charw) + 1,
+        (this.cursorPosition[1] * charh) + 1,
+        charw - 2,
+        charh - 2
+      )
+    }
   }
 
   constructor() {
@@ -135,7 +173,9 @@ class NoriTerm {
 
   private columns: number = 90;
   private rows: number = 32;
+
   private cursorPosition: [number, number] = [0, 0];
+  private cursorFocus: boolean = true;
 
   private colorBackground: string = '#0d2619';
   private colorForeground: string = '#d9e6f2';

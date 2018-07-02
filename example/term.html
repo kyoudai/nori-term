@@ -30,36 +30,21 @@
     const term = new NoriTerm();
     const connector = new TermController(term);
 
-    "Welcome to ".split('').forEach(term.put.bind(term));
-    term.setColor(11);
-    term.setBold();
-    "Nori".split('').forEach(term.put.bind(term));
-    term.resetColor();
-    term.put("!");
-    term.newLine();
-    term.newLine();
-
-    document.body.appendChild(term.getCanvas());
-    term.getCanvas().style.border = '8px solid ' + term.getBackgroundColor();
-
-    // parse test
-    const sample = `[01;32mandrei@debian[00m:[01;34m~/stuff/nori-term[00m$ make watch
-tsc --strictNullChecks -w NoriTerm.ts
-c[[90m21:34:08[0m] Starting compilation in watch mode...
-
-[[90m21:34:10[0m] Found 0 errors. Watching for file changes.`
-
-    // iterate through the sample at a slow(er) speed
     let index = 0;
     const next = () => {
-      if (index < sample.length) {
-        connector.read(sample.charAt(index++));
-      }
+      if (index < term.getRows() + 3) {
+        term.put(`This be line ${++index}`);
+        term.newLine();
 
-      setTimeout(next, 1000 / 30);
+        return setTimeout(next, 0);
+      }
     }
     next();
 
+    window.term = term;
+
+    document.body.appendChild(term.getCanvas());
+    term.getCanvas().style.border = '8px solid ' + term.getBackgroundColor();
 
     // silly typing
     window.addEventListener('keydown', event => {

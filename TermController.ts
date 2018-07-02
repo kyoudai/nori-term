@@ -29,7 +29,7 @@ class TermController {
 
   constructor(private termInstance: NoriTerm) { }
 
-  private match(escapeSequence): boolean {
+  private match(escapeSequence: string): boolean {
     // clear screen (I think?)
     if (escapeSequence === 'c') {
       this.termInstance.clear();
@@ -40,7 +40,13 @@ class TermController {
 
     // colour
     if (TermController.EXP_COLOR.test(escapeSequence)) {
-      const [, foreground] = escapeSequence.match(TermController.EXP_COLOR);
+      const result = escapeSequence.match(TermController.EXP_COLOR);
+
+      if (result === null) {
+        return false;
+      }
+
+      const [, foreground] = result;
 
       this.termInstance.setColor(this.getColorIndex(foreground));
 
@@ -49,7 +55,13 @@ class TermController {
 
     // colour + formatting
     if (TermController.EXP_COLOR_FORMATTING.test(escapeSequence)) {
-      const [, attributes, foreground] = escapeSequence.match(TermController.EXP_COLOR_FORMATTING);
+      const result = escapeSequence.match(TermController.EXP_COLOR_FORMATTING);
+
+      if (result === null) {
+        return false;
+      }
+
+      const [, attributes, foreground] = result;
 
       if (attributes === '01') {
         this.termInstance.setBold();
