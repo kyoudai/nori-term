@@ -77,6 +77,10 @@ class NoriTerm {
     this.currentColor = this.colorPalette[index - 1];
   }
 
+  public isBold(): boolean {
+    return this.fontIsBold;
+  }
+
   public setBold(): void {
     this.fontIsBold = true;
   }
@@ -89,8 +93,20 @@ class NoriTerm {
     return this.rows;
   }
 
+  public setRows(rows: number): void {
+    this.rows = rows;
+
+    this.repaint();
+  }
+
   public getColumns(): number {
     return this.columns;
+  }
+
+  public setColumns(columns: number): void {
+    this.columns = columns;
+
+    this.repaint();
   }
 
   public setTheme(theme: INoriTheme): void {
@@ -137,13 +153,31 @@ class NoriTerm {
     }
   }
 
-  constructor() {
+  public getCursor(): [number, number] {
+    return this.cursorPosition;
+  }
+
+  public getFontSize(): number {
+    return this.fontSize;
+  }
+
+  public setFontSize(size: number): void {
+    this.fontSize = size;
+
+    this.repaint();
+  }
+
+  public repaint(): void {
     const [charw, charh] = this.getBlockSize();
 
     this.canvas.width = this.columns * charw;
     this.canvas.height = this.rows * charh;
 
     this.reset();
+  }
+
+  constructor() {
+    this.repaint();
   }
 
   private clearRegion(x: number, y: number, width: number = 1, height: number = 1): void {
